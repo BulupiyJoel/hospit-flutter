@@ -6,8 +6,8 @@ class ListDonnor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    appBar: AppBar(title: Text("Liste donneurs de sang"),),
-    body: Column(
+    appBar: AppBar(title: const Text("Liste donneurs de sang"),),
+    body: const Column(
     ),);
   }
 }

@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:hospit/pages/admin/auth/login_admin.dart';
 import 'package:hospit/pages/admin/donnor/list_donnor.dart';
 import 'package:hospit/pages/admin/hospital/list_hospital.dart';
+import 'package:hospit/pages/admin/hospital/map_hospital.dart';
 import 'package:hospit/pages/admin/hospital/new_hospital.dart';
-import 'package:hospit/pages/user/inscription.dart';
+import 'package:hospit/pages/medecin/medecin.dart';
 
 class HomePageAdmin extends StatefulWidget {
   const HomePageAdmin({super.key});
@@ -52,8 +53,10 @@ class _HomePageAdminState extends State<HomePageAdmin> {
               title: const Text('Hopitaux'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => ListHospital()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (builder) => const ListHospital()));
               },
             ),
             ListTile(
@@ -64,6 +67,10 @@ class _HomePageAdminState extends State<HomePageAdmin> {
               title: const Text('Medecin'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (builder) => const MedecinPage()));
               },
             ),
             ListTile(
@@ -74,8 +81,24 @@ class _HomePageAdminState extends State<HomePageAdmin> {
               title: const Text('Liste donneurs'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => ListDonnor()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (builder) => const ListDonnor()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                CupertinoIcons.map_pin,
+                color: Colors.green,
+              ),
+              title: const Text('Map'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (builder) => const MapHospital()));
               },
             ),
             ListTile(
@@ -86,8 +109,10 @@ class _HomePageAdminState extends State<HomePageAdmin> {
               title: const Text('Se connecter'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => LoginAdmin()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (builder) => const LoginAdmin()));
               },
             ),
           ],

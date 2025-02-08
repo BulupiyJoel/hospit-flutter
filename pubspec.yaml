@@ -38,7 +38,21 @@ dependencies:
   firebase_core: ^3.10.1
   image_picker: ^1.1.2
   flutter_native_contact_picker: ^0.0.10
-
+  firebase_auth: ^5.4.1
+  cloud_firestore: ^5.6.2
+  firebase_storage: ^12.4.1
+  shared_preferences: ^2.5.1
+  uuid: ^4.5.1
+  maplibre_gl: ^0.20.0
+  latlong2: ^0.9.1
+  location: ^8.0.0
+  geolocator: ^13.0.2
+  google_maps_flutter: ^2.10.0
+  custom_info_window: ^1.0.1
+  flutter_map: ^7.0.2
+  flutter_map_location_marker: ^9.1.1
+  flutter_polyline_points : ^2.1.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

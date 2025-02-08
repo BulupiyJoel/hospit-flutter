@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "6504665814",
-    "project_id": "hospit-cfca3",
-    "storage_bucket": "hospit-cfca3.firebasestorage.app"
+    "project_number": "531234423615",
+    "project_id": "hospit-4a420",
+    "storage_bucket": "hospit-4a420.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:6504665814:android:8dc1d46de088ea6934af77",
+        "mobilesdk_app_id": "1:531234423615:android:ba93e6777ccb3f8073c98a",
         "android_client_info": {
           "package_name": "com.example.hospit"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBnJeP5FdwwYXcswSzASQe9jvKU_r0PnGc"
+          "current_key": "AIzaSyA5sxg6IbUc4sB_Gtsc9jDvLT9cNJhyrEg"
         }
       ],
       "services": {

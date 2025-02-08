@@ -103,9 +103,10 @@ class _ListHospitalState extends State<ListHospital> {
                       color: Colors.red,
                     )),
                     title: Text(hospitals[index].nom),
-                    subtitle: Text(hospitals[index].contact +
-                        " | " +
-                        hospitals[index].addresse),
+                    subtitle: Text("${hospitals[index].contact} | ${hospitals[index].addresse}"),
+                    trailing: Icon(CupertinoIcons.map_pin_ellipse,color: Colors.green,size: 20,),
+                    onTap: () {
+                    },
                   ),
                 );
               },

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:hospit/model/hospital.dart';
 
@@ -20,18 +19,18 @@ class _NewHospitalState extends State<NewHospital> {
       ),
       body: SingleChildScrollView(
         child: Container(
-        margin: EdgeInsets.all(15),
+        margin: const EdgeInsets.all(15),
           child: Column(
             children: [
               TextField(
-                decoration: InputDecoration(label: Text("Nom Hopital"),border: OutlineInputBorder(
+                decoration: InputDecoration(label: const Text("Nom Hopital"),border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10))),
                 controller: _nomController,
               ),
               const SizedBox(height:30),
               TextField(
                 decoration: InputDecoration(
-                    label: Text("Adresse"),
+                    label: const Text("Adresse"),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10))),
                 controller: _nomController,
@@ -40,7 +39,7 @@ class _NewHospitalState extends State<NewHospital> {
               const SizedBox(height:30),
               TextField(
                 decoration: InputDecoration(
-                    label: Text("Contact"),
+                    label: const Text("Contact"),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10))),
                 controller: _nomController,
@@ -49,7 +48,7 @@ class _NewHospitalState extends State<NewHospital> {
               const SizedBox(height:30),
               TextField(
                 decoration: InputDecoration(
-                    label: Text("Longitude"),
+                    label: const Text("Longitude"),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10))),
                 controller: _nomController,
@@ -58,7 +57,7 @@ class _NewHospitalState extends State<NewHospital> {
               const SizedBox(height:30),
               TextField(
                 decoration: InputDecoration(
-                    label: Text("Latitude"),
+                    label: const Text("Latitude"),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10))),
                 controller: _nomController,
