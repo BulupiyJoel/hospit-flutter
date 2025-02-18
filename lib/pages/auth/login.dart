@@ -90,7 +90,7 @@ class _LoginState extends State<Login> {
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) => HomePageAdmin()));
                     } else {
-                      Navigator.of(context).pushReplacement(
+                    Navigator.push(context,
                           MaterialPageRoute(builder: (context) => HomePageUser()));
                     }
                   },

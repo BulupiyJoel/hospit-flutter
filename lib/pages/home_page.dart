@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hospit/pages/user/auth/login_user.dart';
+import 'package:hospit/pages/auth/login.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const LoginUser()));
+                          builder: (context) => const Login()));
                 },
                 style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all(

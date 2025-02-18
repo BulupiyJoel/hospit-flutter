@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hospit/firebase_options.dart';
-// import 'package:hospit/pages/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hospit/pages/admin/home_page.dart';
 import 'package:hospit/pages/auth/login.dart';
 import 'package:hospit/pages/user/home_page.dart';
-// import 'package:hospit/pages/user/home_page.dart';
-// import 'package:hospit/pages/user/inscription.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
