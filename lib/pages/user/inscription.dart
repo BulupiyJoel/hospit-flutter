@@ -1,10 +1,17 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
 import 'package:flutter_native_contact_picker/model/contact.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:hospit/controller/donor_controller.dart';
+import 'package:hospit/model/donnor.dart';
+import 'package:hospit/utils/firebase_config.dart';
+import 'package:hospit/utils/show_information.dart';
 
 class InscriptionPage extends StatefulWidget {
   const InscriptionPage({super.key});
@@ -15,30 +22,22 @@ class InscriptionPage extends StatefulWidget {
 
 class _InscriptionPageState extends State<InscriptionPage> {
   // Controllers for input fields
-  final TextEditingController _nomController = TextEditingController();
-  final TextEditingController _prenomController = TextEditingController();
-  final TextEditingController _sexeController = TextEditingController();
-  final TextEditingController _contactController = TextEditingController();
-  final TextEditingController _groupeSanguinController =
-      TextEditingController();
-  final TextEditingController _electrophoreseController =
-      TextEditingController();
+  late TextEditingController _nomController;
+  late TextEditingController _prenomController;
+  late TextEditingController _sexeController;
+  late TextEditingController _contactController;
+  late TextEditingController _groupeSanguinController;
+  late TextEditingController _electrophoreseController;
+  late TextEditingController _adresseController;
 
   // Image manipulation
-  File? _image;
-  final _imagePicker = ImagePicker();
-
+  PlatformFile? pickedFile;
   Future<void> getImage() async {
-    XFile? xFile = await _imagePicker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 100,
-        maxHeight: 100,
-        imageQuality: 95);
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
 
     setState(() {
-      if (xFile != null) {
-        _image = File(xFile.path);
-      }
+      pickedFile = result.files.first;
     });
   }
 
@@ -52,7 +51,6 @@ class _InscriptionPageState extends State<InscriptionPage> {
     setState(() {
       _selectedPhoneNumber = contact?.selectedPhoneNumber;
       _contactController.text = _selectedPhoneNumber!;
-      showMessage("Contact selected is : $_selectedPhoneNumber");
     });
   }
 
@@ -68,10 +66,19 @@ class _InscriptionPageState extends State<InscriptionPage> {
     "O-"
   ];
 
-  Future<void> setGroupSanguin(value) async {
-    setState(() {
-      _groupeSanguinController.text = value;
-    });
+  //Upload File to Firebase
+  String path = "";
+  UploadTask? uploadTask;
+  Future uploadFile() async {
+    path = '/files/${pickedFile!.name}';
+    final file = File(pickedFile!.path!);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    uploadTask = ref.putFile(file);
+
+    final snapshot = await uploadTask!.whenComplete(() {});
+    final downloadUrl = await snapshot.ref.getDownloadURL();
+    print(downloadUrl);
   }
 
 //Electrophorese implementation
@@ -84,10 +91,28 @@ class _InscriptionPageState extends State<InscriptionPage> {
     "CC",
   ];
 
+  //Sexe
+  List<String> sexes = ["M", "F"];
+
   Future<void> setElectrophorese(value) async {
     setState(() {
       _electrophoreseController.text = value;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _nomController = TextEditingController();
+    _prenomController = TextEditingController();
+    _sexeController = TextEditingController(
+        text: sexes.first); // ✅ Prend le premier élément valide
+    _groupeSanguinController = TextEditingController(text: groupSanguin.first);
+    _electrophoreseController =
+        TextEditingController(text: electrophorese.first);
+    _adresseController = TextEditingController();
+    _contactController = TextEditingController();
   }
 
   @override
@@ -104,14 +129,16 @@ class _InscriptionPageState extends State<InscriptionPage> {
                 onTap: () {
                   getImage();
                 },
-                child: _image == null
+                child: pickedFile == null
                     ? const CircleAvatar(
                         radius: 50,
                         backgroundImage: AssetImage("images/camera.png"),
                       )
                     : CircleAvatar(
                         radius: 50,
-                        backgroundImage: FileImage(_image!),
+                        backgroundImage: FileImage(
+                          File(pickedFile!.path!),
+                        ),
                       ),
               ),
             ),
@@ -143,11 +170,15 @@ class _InscriptionPageState extends State<InscriptionPage> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              value: 'M',
-              items: const [
-                DropdownMenuItem(value: 'M', child: Text('Male')),
-                DropdownMenuItem(value: 'F', child: Text('Female')),
-              ],
+              value: sexes.contains(_sexeController.text)
+                  ? _sexeController.text
+                  : null, // ✅ Vérification
+              items: sexes.map((sexe) {
+                return DropdownMenuItem<String>(
+                  value: sexe,
+                  child: Text(sexe),
+                );
+              }).toList(),
               onChanged: (value) {
                 setState(() {
                   _sexeController.text = value!;
@@ -194,20 +225,27 @@ class _InscriptionPageState extends State<InscriptionPage> {
               height: 30,
             ),
             DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  labelText: 'Group sanguin',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+              decoration: InputDecoration(
+                labelText: 'Groupe sanguin',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                value: "O+",
-                items: groupSanguin
-                    .map((group) => DropdownMenuItem<String>(
-                        value: group, child: Text(group)))
-                    .toList(),
-                onChanged: (value) {
-                  setGroupSanguin(value!);
-                }),
+              ),
+              value: groupSanguin.contains(_groupeSanguinController.text)
+                  ? _groupeSanguinController.text
+                  : null, // ✅ Vérification
+              items: groupSanguin.map((group) {
+                return DropdownMenuItem<String>(
+                  value: group,
+                  child: Text(group),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  _groupeSanguinController.text = value!;
+                });
+              },
+            ),
             const SizedBox(
               height: 30,
             ),
@@ -218,40 +256,93 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                value: "AA",
+                value: electrophorese.contains(_electrophoreseController.text)
+                    ? _electrophoreseController.text
+                    : null,
                 items: electrophorese
                     .map((group) => DropdownMenuItem<String>(
                         value: group, child: Text(group)))
                     .toList(),
                 onChanged: (value) {
-                  setElectrophorese(value!);
+                  setState(() {
+                    _electrophoreseController.text = value!;
+                  });
                 }),
             const SizedBox(
-              height: 30,
+              height: 20,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Adresse',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              controller: _adresseController,
+            ),
+            const SizedBox(
+              height: 20,
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 // TODO: Implement form submission logic here
-                // This should include validation of input fields,
-                // and sending the data to the server or saving it locally.
+                String name = _nomController.text;
+                String lastname = _prenomController.text;
+                String sexe = _sexeController.text;
+                String contact = _contactController.text;
+                String group = _groupeSanguinController.text;
+                String elec = _electrophoreseController.text;
+                String address = _adresseController.text;
+
+                if (name.isEmpty ||
+                    lastname.isEmpty ||
+                    sexe.isEmpty ||
+                    contact.isEmpty ||
+                    group.isEmpty ||
+                    elec.isEmpty ||
+                    address.isEmpty) {
+                  showMessage(context,
+                      "Nom : ${name}/Prenom : ${lastname}/Sexe : ${sexe}/Contact : ${contact}/Sang : ${group}/Elec : ${elec}/Addr : ${address} Aucun champ ne peut etre vide");
+                } else {
+                  Donnor donor = Donnor(
+                    nom: name,
+                    prenom: lastname,
+                    sexe: sexe,
+                    contact: contact,
+                    groupeSanguin: group,
+                    electrophorese: elec,
+                    address: address,
+                  );
+
+                  DonorController donorController = DonorController();
+                  String response = await donorController.create(donor);
+
+                  showMessage(context, response);
+
+                  _nomController.clear();
+                  _prenomController.clear();
+                  _sexeController.clear();
+                  _contactController.clear();
+                  _groupeSanguinController.clear();
+                  _electrophoreseController.clear();
+                  _adresseController.clear();
+                }
               },
               style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor,
+                backgroundColor: Theme.of(context).primaryColor,
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: const Text('Submit',style: TextStyle(color: Colors.white),),
+              child: const Text(
+                'Envoyer',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  showMessage(String message) {
-    final snackBar = SnackBar(content: Text(message));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

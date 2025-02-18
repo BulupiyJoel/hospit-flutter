@@ -1,18 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hospit/controller/auth_controller.dart';
-import 'package:hospit/pages/admin/auth/register_admin.dart';
+import 'package:hospit/pages/auth/register.dart';
 import 'package:hospit/pages/admin/home_page.dart';
+import 'package:hospit/pages/user/home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginAdmin extends StatefulWidget {
-  const LoginAdmin({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
 
   @override
-  State<LoginAdmin> createState() => _LoginAdminState();
+  State<Login> createState() => _LoginState();
 }
 
-class _LoginAdminState extends State<LoginAdmin> {
+class _LoginState extends State<Login> {
   late SharedPreferences pref;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
@@ -21,7 +22,6 @@ class _LoginAdminState extends State<LoginAdmin> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
@@ -49,7 +49,7 @@ class _LoginAdminState extends State<LoginAdmin> {
                         borderRadius: BorderRadius.circular(10))),
                 controller: _emailController,
               ),
-              const SizedBox(height: 30),const SizedBox(height: 30),
+              const SizedBox(height: 30),
               TextField(
                 decoration: InputDecoration(
                     labelText: "Password",
@@ -65,34 +65,33 @@ class _LoginAdminState extends State<LoginAdmin> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (builder) => RegisterAdmin()));
+                            builder: (builder) => Register()));
                   },
                   child: Text("Pas de compte ? Créer")),
-              const SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 30),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () async {
-                    // TODO: Implement form submission logic here
-                    // This should include validation of input fields,
-                    // and sending the data to the server or saving it locally.
                     AuthController auth = AuthController();
                     String email = _emailController.text;
                     String password = _passwordController.text;
-                    String statut =
-                        await auth.seConnecterMailPassword(email, password);
-                    print("statut : $statut");
 
-                    if (statut == "accès autorisé") {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (builder) => HomePageAdmin()));
+                    // Récupérer le statut de connexion
+                    String statut = await auth.seConnecterMailPassword(email, password);
+                    print("Statut : $statut");
+
+                    // Récupérer le rôle stocké
+                    pref = await SharedPreferences.getInstance();
+                    String? role = pref.getString("role");
+
+                    // Vérifier le rôle et rediriger vers la bonne page
+                    if (role == "admin") {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => HomePageAdmin()));
                     } else {
-                      print("Statut : $statut");
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => HomePageUser()));
                     }
                   },
                   style: ElevatedButton.styleFrom(

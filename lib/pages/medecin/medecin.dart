@@ -118,7 +118,8 @@ class _MedecinPageState extends State<MedecinPage> {
                         String response = await doctorController.create(doctor);
                         _nomController.clear();
                         _specialiteController.clear();
-                        
+
+                        // ignore: use_build_context_synchronously
                         showMessage(context, response);
                       },
                       style: ElevatedButton.styleFrom(

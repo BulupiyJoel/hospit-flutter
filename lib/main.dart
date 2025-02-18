@@ -3,6 +3,8 @@ import 'package:hospit/firebase_options.dart';
 // import 'package:hospit/pages/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hospit/pages/admin/home_page.dart';
+import 'package:hospit/pages/auth/login.dart';
+import 'package:hospit/pages/user/home_page.dart';
 // import 'package:hospit/pages/user/home_page.dart';
 // import 'package:hospit/pages/user/inscription.dart';
 
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.blueAccent,
         useMaterial3: true,
       ),
-      home: const HomePageAdmin(),
+      home: const Login(),
     );
   }
 }

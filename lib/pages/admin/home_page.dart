@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hospit/pages/admin/auth/login_admin.dart';
+import 'package:hospit/pages/auth/login.dart';
 import 'package:hospit/pages/admin/donnor/list_donnor.dart';
 import 'package:hospit/pages/admin/hospital/list_hospital.dart';
-import 'package:hospit/pages/admin/hospital/map_hospital.dart';
 import 'package:hospit/pages/admin/hospital/new_hospital.dart';
 import 'package:hospit/pages/medecin/medecin.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePageAdmin extends StatefulWidget {
   const HomePageAdmin({super.key});
@@ -15,6 +15,14 @@ class HomePageAdmin extends StatefulWidget {
 }
 
 class _HomePageAdminState extends State<HomePageAdmin> {
+  late SharedPreferences ref;
+  getUsername() async {
+    ref = await SharedPreferences.getInstance();
+    String? username = ref.getString("username");
+    print(username);
+    return username;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,31 +96,24 @@ class _HomePageAdminState extends State<HomePageAdmin> {
               },
             ),
             ListTile(
-              leading: const Icon(
-                CupertinoIcons.map_pin,
-                color: Colors.green,
-              ),
-              title: const Text('Map'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (builder) => const MapHospital()));
-              },
-            ),
-            ListTile(
-              leading: const Icon(
-                CupertinoIcons.person,
-                color: Colors.red,
-              ),
-              title: const Text('Se connecter'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (builder) => const LoginAdmin()));
+              leading: Icon(getUsername() == null
+                  ? Icons.login_outlined
+                  : Icons.logout_outlined),
+              title:
+                  Text(getUsername() == null ? "Se connecter" : "Déconnexion"),
+              onTap: () async {
+                if (getUsername() == null) {
+                  Navigator.pop(context);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (builder) => const Login()));
+                } else {
+                  ref = await SharedPreferences.getInstance();
+                  await ref.remove("email");
+                  await ref.remove("username");
+                  Navigator.pop(context);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (builder) => const Login()));
+                }
               },
             ),
           ],
