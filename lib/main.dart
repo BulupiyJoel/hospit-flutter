@@ -1,33 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:hospit/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:hospit/pages/admin/home_page.dart';
-import 'package:hospit/pages/auth/login.dart';
-import 'package:hospit/pages/user/home_page.dart';
+import 'package:hospit/map_hospital.dart';
 
-Future<void> main() async {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Hospit Flutter',
       debugShowCheckedModeBanner: false,
-      title: 'Blood Donation',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-        primaryColor: Colors.blueAccent,
-        useMaterial3: true,
+        primarySwatch: Colors.blue,
       ),
-      home: const Login(),
+      home: const MapHospital(),
     );
   }
 }
